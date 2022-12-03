@@ -1,9 +1,11 @@
 INPUT = "./day01_input"
 
 def make_dict(lines):
+    print(lines)
     elf = 0
     inventory = {elf: []}
     for line in lines:
+        print(line)
         if line == "\n":
             elf += 1
             inventory[elf] = []
