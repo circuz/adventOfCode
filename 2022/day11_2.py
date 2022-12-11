@@ -31,7 +31,7 @@ class Monkey():
         self.doFalse = int(dofalse_text[:-1].split(" ")[-1])
         return
 
-    def inspect_items(self):
+    def inspect_items(self, scd):
         new_items = []
         for item in self.items:
             self.inspects += 1
@@ -46,7 +46,7 @@ class Monkey():
                 continue
             new_items.append(item + int(self.operation[1]))
             continue
-        self.items = new_items
+        self.items = [item % scd for item in new_items ]
         return
 
     def gets_bored(self):
@@ -66,6 +66,7 @@ class Monkey():
                 
 def create_monkeys(lines): 
     monkeys = []
+    scd = 1
     for line in lines:
         if "Monkey" in line:
             name = line[7]
@@ -77,12 +78,13 @@ def create_monkeys(lines):
             monkeys.append(current_monkey)
         elif "Test:" in line:
             current_monkey.set_test(line)
+            scd *= int(line[:-1].split(" ")[-1])
         elif "true:" in line:
             current_monkey.set_dotrue(line)
         elif "false:" in line:
             current_monkey.set_dofalse(line)
             
-    return monkeys
+    return monkeys, scd
 
 def show_monkey(monkey):
     print(f"""Monkey {monkey.name}:
@@ -93,9 +95,8 @@ def show_monkey(monkey):
             if false: toss to monkey {monkey.doFalse}
         and has inspected {monkey.inspects} items.""")
 
-def take_turn(monkey, monkey_list):
-    monkey.inspect_items()
-    monkey.gets_bored()
+def take_turn(monkey, monkey_list, scd):
+    monkey.inspect_items(scd)
     for item in monkey.items:
         monkey_list[monkey.test_item(item)].add_item(item)
 
@@ -104,13 +105,14 @@ def take_turn(monkey, monkey_list):
 
 if __name__ == "__main__":
     with open(INPUT,'r') as lines:
-        monkey_list = create_monkeys(lines)
+        monkey_list, scd = create_monkeys(lines)
+        print(scd)
         #print(monkey_list)
         #for monkey in monkey_list:
         #    show_monkey(monkey)
-        for i in range(20):
+        for i in range(10000):
             for monkey in monkey_list:
-                take_turn(monkey, monkey_list)
+                take_turn(monkey, monkey_list, scd)
                 #print("New monkey!")
                 #for monkey in monkey_list:
                     #print(monkey.items)
