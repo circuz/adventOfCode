@@ -1,4 +1,4 @@
-INPUT = "./day11_input"
+INPUT = "./day11_mini"
 
 class Monkey():
     def __init__(self,name = "Nameless monkey",items = []):
@@ -111,9 +111,9 @@ if __name__ == "__main__":
         for i in range(20):
             for monkey in monkey_list:
                 take_turn(monkey, monkey_list)
-                print("New monkey!")
-                for monkey in monkey_list:
-                    print(monkey.items)
+                #print("New monkey!")
+                #for monkey in monkey_list:
+                    #print(monkey.items)
                 #show_monkey(monkey)
         for monkey in monkey_list:
             show_monkey(monkey)
