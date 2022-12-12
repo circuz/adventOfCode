@@ -1,6 +1,5 @@
 INPUT = "./day12_input"
-# 482 too high
-# 400 too low
+# 188 too low
 
 def plus(a, b):
     c = list(a)
@@ -14,11 +13,10 @@ class Landscape():
         for i,line in enumerate(lines):
             for j,c in enumerate(line[:-1]):
                 if c == "E":
-                    self.end = (i,j)
+                    self.start = (i,j)
                     self.landscape[i,j] = 35
                     continue
                 if c == "S":
-                    self.start = (i,j)
                     self.landscape[i,j] = 10
                     continue
                 self.landscape[i,j] = int(c,36)
@@ -39,9 +37,18 @@ class Landscape():
             self.get_check_next()
         #print(self.landscape)
         #print(self.distance)
-        print(self.distance[self.end])
+        print("Got all distances!")
+        distances_to_a = []
+        shortest_distance = 9999999
+        for tile in self.distance:
+            if self.landscape[tile] == 10:
+                distances_to_a.append(self.distance[tile])
+                if self.distance[tile] < shortest_distance:
+                    shortest_distance = self.distance[tile]
+                    print(shortest_distance)
         print("===========")
-        print(self.unvisited)
+        print(f'Shortest: {min(distances_to_a)}')
+
            
     def get_check_next(self):
         curr = self.check_next[0]
@@ -53,7 +60,7 @@ class Landscape():
                 #print(f'Jag har inte gått till {direction} än, det borde jag göra!')
                 if direction in self.unvisited:
                     #print("den är inte besökt...")
-                    if self.landscape[direction] <= (self.landscape[curr] + 1):
+                    if self.landscape[direction] >= (self.landscape[curr] - 1):
                         self.distance[direction] = self.distance[curr] + 1
                         self.check_next.append(direction)
             self.unvisited.remove(curr)
@@ -63,5 +70,5 @@ class Landscape():
 if __name__ == "__main__":
     with open(INPUT,'r') as lines:
         land = Landscape(lines)
-        print(land.start, land.end)
+        print(land.start)
         paths = land.find_path()
