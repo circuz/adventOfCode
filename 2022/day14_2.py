@@ -3,8 +3,8 @@ INPUT = "./day14_input"
 def create_cave(min_x, max_x, min_y, max_y):
     min_y += -12
     max_y += 3
-    min_x += -301
-    max_x += 302
+    min_x += -151
+    max_x += 152
     cave = { (x,y):"." for x in range(min_x,max_x) for y in range(min_y, max_y) }
     return cave
 
@@ -78,7 +78,6 @@ def start_droppin(cave):
     drop_x = 500
     drop_y = 0 
     max_y = max(cave)[1] - 1
-    print(drop_y)
     while next_sand(cave, drop_x, drop_y, max_y):
         sands += 1
         #show_cave(cave)
@@ -88,8 +87,6 @@ if __name__ == "__main__":
     with open(INPUT,'r') as lines:
         cave = parse(lines)
         show_cave(cave)
-        print(min(cave))
-        print(max(cave))
         print("")
         sands = start_droppin(cave) 
         show_cave(cave)
