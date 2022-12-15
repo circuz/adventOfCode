@@ -22,12 +22,11 @@ def get_radii_plus_one(sensors, beacons):
     return length
 
 def circles_haha_not_at_all_circles( sensors, radii ) -> dict[tuple : set]:
-    total = 0
     circles = {}
     for (sen, rad) in zip(sensors, radii):
         circles[sen] = []
-        print(f"new circle! number {len(circles)}")
-        print(sen,rad)
+        #print(f"new circle! number {len(circles)}")
+        #print(sen,rad)
         x = sen[0] - rad
         y = sen[1]
         curr = []
@@ -52,8 +51,6 @@ def circles_haha_not_at_all_circles( sensors, radii ) -> dict[tuple : set]:
             y += d
             curr.append((x,y))
         circles[sen] = curr
-        total += len(circles[sen])
-        print(total)
     return circles
 
 
@@ -64,5 +61,6 @@ if __name__ == "__main__":
         print(sen, bea)
         #show_cave(cave)        
         radii = get_radii_plus_one(sen,bea)
-        # wtf this crashes my python and terminal lol
-        circles = circles_haha_not_at_all_circles(sen, radii)
+        print(radii)
+        circles = circles_haha_not_at_all_circles(sen, radii)   # haha this crashes my python and terminal lol
+        print(max(radii))
