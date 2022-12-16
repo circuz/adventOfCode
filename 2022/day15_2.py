@@ -1,3 +1,13 @@
+import matplotlib.pyplot as plt
+# 9814447029623 too low
+# not 12118494453611 either
+# try around 2453611, 3029623
+# OK I FOUND IT BY PLAYING AROUND WITH CODE I CAN'T EXPLAIN IT!
+# basically look at "circles" 6 and 10, and 20 and 19. they are 1 apart.
+# they cross at 2740279, 2625406
+TESTX = 2453611
+TESTY = 3029623
+
 INPUT = "./day15_input"
 
 def create_cave(lines):
@@ -15,52 +25,76 @@ def create_cave(lines):
         beacons.append((x,y))
     return (sensors, beacons)
 
-def get_radii_plus_one(sensors, beacons):
+def get_radii(sensors, beacons):
     length = []
     for (sen, bea) in zip(sensors, beacons):
-        length.append(abs(sen[0] - bea[0]) + abs(sen[1] - bea[1]) + 1)
+        length.append(abs(sen[0] - bea[0]) + abs(sen[1] - bea[1]))
     return length
 
-def circles_haha_not_at_all_circles( sensors, radii ) -> dict[tuple : set]:
+def get_extremes(sensors, radii):
     circles = {}
-    for (sen, rad) in zip(sensors, radii):
-        circles[sen] = []
-        #print(f"new circle! number {len(circles)}")
-        #print(sen,rad)
-        x = sen[0] - rad
-        y = sen[1]
-        curr = []
-        print("going up right")
-        for d in range(rad): # up right
-            x += d
-            y += d
-            curr.append((x,y))
-        print("going down right")
-        for d in range(rad): # down right
-            x += d
-            y -= d
-            curr.append((x,y))
-        print("going down left")
-        for d in range(rad): # down left
-            x -= d
-            y -= d
-            curr.append((x,y))
-        print("going up left")
-        for d in range(rad): # up left
-            x -= d
-            y += d
-            curr.append((x,y))
-        circles[sen] = curr
-    return circles
+    i = 0
+    for sen in sensors:
+        # circle = [ right, up, left, down ]
+        circles[i+1] = [ (sen[0] + radii[i], sen[1]),(sen[0], sen[1] - radii[i]),(sen[0] - radii[i], sen[1]),(sen[0], sen[1] + radii[i]), ]
+        i += 1
+    return circles 
+
+def top_right_pair(circles):
+    """ where would a line from a to b cross 0? It would cross at x - y as we have lines f(x) = y. so look for circles such that the top is two more than anothers bot """
+    pairs = {} 
+    for i,circle1 in circles.items():
+        pairs[i] = []
+        topoffset = circle1[1][0] - circle1[1][1]
+        for j, circle2 in circles.items():
+            if circle2[3][0] - circle2[3][1] == topoffset - 2:
+                pairs[i].append(j)
+    return pairs
 
 
+def top_left_pair(circles):
+    """ where would a line from a to b cross 0? It would cross at x + y as we have lines f(x) = y. so look for circles such that the top is two less than anothers bot """
+    pairs = {} 
+    for i,circle1 in circles.items():
+        pairs[i] = []
+        topoffset = circle1[1][0] + circle1[1][1]
+        for j, circle2 in circles.items():
+            if circle2[3][0] + circle2[3][1] == topoffset - 2:
+                print("ASD")
+                pairs[i].append(j)
+    return pairs
+
+
+def show_circles(circles):
+    for i,circle in circles.items():
+        """
+        if i != 10:
+            if i != 6:
+                continue
+                """
+        """
+        if i != 20:
+            if i != 19:
+                continue
+                """
+        plt.plot([circle[0][0], circle[1][0], circle[2][0], circle[3][0], circle[0][0]], [circle[0][1], circle[1][1], circle[2][1], circle[3][1], circle[0][1], ])
+    plt.plot([0,0,4000000,4000000,0],[0,4000000,4000000,0,0])
+    plt.plot([0,4000000,],[0,4000000])
+    #plt.plot([0,0,20,20,0],[0,20,20,0,0])
+    plt.show()
 
 if __name__ == "__main__":
     with open(INPUT,'r') as lines:
         (sen, bea) = create_cave(lines)
-        print(sen, bea)
-        #show_cave(cave)        
-        radii = get_radii_plus_one(sen,bea)
+        print(sen)
+        print(bea)
+        radii = get_radii(sen,bea)
         print(radii)
-        circles = circles_haha_not_at_all_circles(sen, radii)   # haha this crashes my python and terminal lol
-        print(max(radii))
+        circles = get_extremes(sen,radii)
+        print(circles)
+        show_circles(circles)
+        pairs = top_right_pair(circles)
+        pairs2 = top_left_pair(circles)
+        print(pairs)
+        print(pairs2)
+
